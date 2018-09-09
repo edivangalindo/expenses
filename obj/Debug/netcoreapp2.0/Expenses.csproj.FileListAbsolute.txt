@@ -1,0 +1,10 @@
+C:\dev\Expenses\bin\Debug\netcoreapp2.0\Expenses.deps.json
+C:\dev\Expenses\bin\Debug\netcoreapp2.0\Expenses.runtimeconfig.json
+C:\dev\Expenses\bin\Debug\netcoreapp2.0\Expenses.runtimeconfig.dev.json
+C:\dev\Expenses\bin\Debug\netcoreapp2.0\Expenses.dll
+C:\dev\Expenses\bin\Debug\netcoreapp2.0\Expenses.pdb
+C:\dev\Expenses\obj\Debug\netcoreapp2.0\Expenses.csproj.CoreCompileInputs.cache
+C:\dev\Expenses\obj\Debug\netcoreapp2.0\Expenses.AssemblyInfoInputs.cache
+C:\dev\Expenses\obj\Debug\netcoreapp2.0\Expenses.AssemblyInfo.cs
+C:\dev\Expenses\obj\Debug\netcoreapp2.0\Expenses.dll
+C:\dev\Expenses\obj\Debug\netcoreapp2.0\Expenses.pdb
