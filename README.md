@@ -1,0 +1,1 @@
+Project for studies of .net core, docker, EF, SQL Server, DDD and other technologies.
