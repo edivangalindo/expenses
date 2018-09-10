@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Expenses.Models;
+using Expenses.Data.Maps;
 
 namespace Expenses.Data
 {
@@ -11,6 +12,11 @@ namespace Expenses.Data
         {
             var config = new Config();
             optionsBuilder.UseSqlServer(config.ConnectionString);
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfiguration(new ExpenseMap());
         }
     }
 }

@@ -5,6 +5,5 @@ namespace Expenses.Models
         Cash,
         Digio,
         Nubank
-
     }
 }
