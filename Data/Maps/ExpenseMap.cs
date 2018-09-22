@@ -11,6 +11,7 @@ namespace Expenses.Data.Maps
             builder.ToTable("Expense");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Description).IsRequired().HasMaxLength(120).HasColumnType("varchar(120)");
+            builder.Property(x => x.Price).IsRequired();
         }
     }
 }
