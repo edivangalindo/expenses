@@ -11,9 +11,10 @@ using System;
 namespace Expenses.Migrations
 {
     [DbContext(typeof(StoreDataContext))]
-    partial class StoreDataContextModelSnapshot : ModelSnapshot
+    [Migration("20180928003831_v1.5")]
+    partial class v15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,34 +76,6 @@ namespace Expenses.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Revenue");
-                });
-
-            modelBuilder.Entity("Expenses.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("varchar(250)")
-                        .HasMaxLength(250);
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("varchar(120)")
-                        .HasMaxLength(120);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(120)")
-                        .HasMaxLength(120);
-
-                    b.Property<string>("Password")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Expenses.Models.Expense", b =>

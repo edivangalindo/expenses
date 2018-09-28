@@ -1,9 +1,8 @@
 namespace Expenses.Models
 {
-    public enum PaymentMethod
+    public class PaymentMethod
     {
-        Cash,
-        Digio,
-        Nubank
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

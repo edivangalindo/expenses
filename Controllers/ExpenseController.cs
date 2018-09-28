@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Expenses.Data;
 using Expenses.Models;
+using Expenses.ViewModels.ExpenseViewModels;
+using Expenses.ViewModels;
 
 namespace Expenses.Controllers
 {
@@ -18,9 +20,19 @@ namespace Expenses.Controllers
 
         [Route("v1/expenses")]
         [HttpGet]
-        public IEnumerable<Expense> Get()
+        public IEnumerable<ListExpenseViewModel> Get()
         {
-            return _context.Expenses.AsNoTracking().ToList();
+            return _context.Expenses
+            .Select(x => new ListExpenseViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                PaymentMethodId = x.PaymentMethodId,
+                Date = x.Date,
+                Value = x.Value
+            })
+            .AsNoTracking()
+            .ToList();
         }
 
         [Route("v1/expenses/{id}")]
@@ -32,22 +44,45 @@ namespace Expenses.Controllers
 
         [Route("v1/expenses")]
         [HttpPost]
-        public Expense Post([FromBody]Expense expense)
+        public ResultViewModel Post([FromBody]EditorExpenseViewModel model)
         {
+            var expense = new Expense();
+            expense.Id = model.Id;
+            expense.Name = model.Name;
+            expense.Value = model.Value;
+            expense.Date = model.Date;
+            expense.PaymentMethodId = model.PaymentMethodId;
+
             _context.Expenses.Add(expense);
             _context.SaveChanges();
 
-            return expense;
+            return new ResultViewModel
+            {
+                Success = true,
+                Message = "Despesa cadastrada com sucesso.",
+                Data = expense
+            };
         }
 
         [Route("v1/expenses")]
         [HttpPut]
-        public Expense Put([FromBody]Expense expense)
+        public ResultViewModel Put([FromBody]EditorExpenseViewModel model)
         {
+            var expense = _context.Expenses.Find(model.Id);
+            expense.Name = model.Name;
+            expense.Value = model.Value;
+            expense.Date = model.Date;
+            expense.PaymentMethodId = model.PaymentMethodId;
+            
             _context.Entry<Expense>(expense).State = EntityState.Modified;
             _context.SaveChanges();
 
-            return expense;
+            return new ResultViewModel
+            {
+                Success = true,
+                Message = "Despesa alterada com sucesso.",
+                Data = expense
+            };
         }
 
         [Route("v1/expenses")]
