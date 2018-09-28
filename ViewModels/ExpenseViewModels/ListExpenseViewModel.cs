@@ -9,5 +9,6 @@ namespace Expenses.ViewModels.ExpenseViewModels
         public decimal Value { get; set; }
         public DateTime Date { get; set; }
         public int PaymentMethodId { get; set; }
+        public int UserId { get; set; }
     }
 }

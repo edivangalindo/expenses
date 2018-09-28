@@ -11,9 +11,10 @@ using System;
 namespace Expenses.Migrations
 {
     [DbContext(typeof(StoreDataContext))]
-    partial class StoreDataContextModelSnapshot : ModelSnapshot
+    [Migration("20180928011301_v1.7")]
+    partial class v17
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

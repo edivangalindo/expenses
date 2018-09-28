@@ -27,9 +27,10 @@ namespace Expenses.Controllers
             {
                 Id = x.Id,
                 Name = x.Name,
-                PaymentMethodId = x.PaymentMethodId,
                 Date = x.Date,
-                Value = x.Value
+                Value = x.Value,
+                PaymentMethodId = x.PaymentMethodId,
+                UserId = x.UserId
             })
             .AsNoTracking()
             .ToList();
@@ -52,6 +53,7 @@ namespace Expenses.Controllers
             expense.Value = model.Value;
             expense.Date = model.Date;
             expense.PaymentMethodId = model.PaymentMethodId;
+            expense.UserId = model.UserId;
 
             _context.Expenses.Add(expense);
             _context.SaveChanges();
@@ -73,7 +75,8 @@ namespace Expenses.Controllers
             expense.Value = model.Value;
             expense.Date = model.Date;
             expense.PaymentMethodId = model.PaymentMethodId;
-            
+            expense.UserId = model.UserId;
+
             _context.Entry<Expense>(expense).State = EntityState.Modified;
             _context.SaveChanges();
 
