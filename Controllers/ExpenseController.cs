@@ -32,8 +32,7 @@ namespace Expenses.Controllers
                 PaymentMethodId = x.PaymentMethodId,
                 UserId = x.UserId
             })
-            .AsNoTracking()
-            .ToList();
+            .AsNoTracking();
         }
 
         [Route("v1/expenses/{id}")]
@@ -51,7 +50,7 @@ namespace Expenses.Controllers
             expense.Id = model.Id;
             expense.Name = model.Name;
             expense.Value = model.Value;
-            expense.Date = model.Date;
+            expense.Date = System.DateTime.Now;
             expense.PaymentMethodId = model.PaymentMethodId;
             expense.UserId = model.UserId;
 
@@ -83,7 +82,7 @@ namespace Expenses.Controllers
             return new ResultViewModel
             {
                 Success = true,
-                Message = "Despesa alterada com sucesso.",
+                Message = "Despesa atualizada com sucesso.",
                 Data = expense
             };
         }

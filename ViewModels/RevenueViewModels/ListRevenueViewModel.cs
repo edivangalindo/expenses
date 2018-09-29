@@ -1,17 +1,13 @@
 using System;
 
-namespace Expenses.Models
+namespace Expenses.ViewModels.RevenueViewModels
 {
-    public class Expense
+    public class ListRevenueViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Value { get; set; }
         public DateTime Date { get; set; }
-        public int PaymentMethodId { get; set; }
-        public PaymentMethod PaymentMethod { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
-        
     }
 }
