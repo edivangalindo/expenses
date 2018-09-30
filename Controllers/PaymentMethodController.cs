@@ -7,48 +7,53 @@ using System.Linq;
 using Expenses.ViewModels;
 using System.Collections.Generic;
 using Expenses.ViewModels.PaymentMethodViewModels;
+using Expenses.Repositories;
 
 namespace Expenses.Controllers
 {
     public class PaymentMethodController : Controller
     {
-        private readonly StoreDataContext _context;
+        private readonly PaymentMethodRepository _repository;
 
-        public PaymentMethodController(StoreDataContext context)
+        public PaymentMethodController(PaymentMethodRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [Route("v1/paymentMethods")]
         [HttpGet]
         public IEnumerable<ListPaymentMethodViewModel> Get()
         {
-            return _context.PaymentMethods
-                .Select(x => new ListPaymentMethodViewModel
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                }
-            ).AsNoTracking();
+            return _repository.Get();
         }
 
         [Route("v1/paymentMethods/{id}")]
         [HttpGet]
         public PaymentMethod Get(int id)
         {
-            return _context.PaymentMethods.AsNoTracking().Where(x => x.Id == id).FirstOrDefault();
+            return _repository.Get(id);
         }
 
         [Route("v1/paymentMethods")]
         [HttpPost]
         public ResultViewModel Post([FromBody]EditorPaymentMethodViewModel model)
         {
+            model.Validate();
+            if (model.Invalid)
+            {
+                return new ResultViewModel()
+                {
+                    Success = false,
+                    Message = "Não foi possível cadastrar o método de pagamento.",
+                    Data = model.Notifications
+                };
+            }
+
             var paymentMethod = new PaymentMethod();
             paymentMethod.Id = model.Id;
             paymentMethod.Name = model.Name;
 
-            _context.PaymentMethods.Add(paymentMethod);
-            _context.SaveChanges();
+            _repository.Save(paymentMethod);
 
             return new ResultViewModel
             {
@@ -62,11 +67,21 @@ namespace Expenses.Controllers
         [HttpPut]
         public ResultViewModel Put([FromBody]EditorPaymentMethodViewModel model)
         {
-            var paymentMethod = _context.PaymentMethods.Find(model.Id);
+            model.Validate();
+            if (model.Invalid)
+            {
+                return new ResultViewModel()
+                {
+                    Success = false,
+                    Message = "Não foi possível atualizar o método de pagamento",
+                    Data = model.Notifications
+                };
+            }
+
+            var paymentMethod = _repository.Get(model.Id);
             paymentMethod.Name = model.Name;
 
-            _context.Entry<PaymentMethod>(paymentMethod).State = EntityState.Modified;
-            _context.SaveChanges();
+            _repository.Update(paymentMethod);
 
             return new ResultViewModel
             {
@@ -80,9 +95,7 @@ namespace Expenses.Controllers
         [HttpDelete]
         public PaymentMethod Delete([FromBody]PaymentMethod paymentMethod)
         {
-            _context.PaymentMethods.Remove(paymentMethod);
-            _context.SaveChanges();
-
+            _repository.Delete(paymentMethod);
             return paymentMethod;
         }
     }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Expenses.Data;
 using Expenses.Models;
+using Expenses.Repositories;
 using Expenses.ViewModels;
 using Expenses.ViewModels.RevenueViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -11,38 +12,41 @@ namespace Expenses.Controllers
 {
     public class RevenueController : Controller
     {
-        private readonly StoreDataContext _context;
-        public RevenueController(StoreDataContext context)
+        private readonly RevenueRepository _repository;
+        public RevenueController(RevenueRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [Route("v1/revenues")]
         [HttpGet]
         public IEnumerable<ListRevenueViewModel> Get()
         {
-            return _context.Revenues
-                .Select(x => new ListRevenueViewModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    UserId = x.UserId,
-                    Date = x.Date,
-                    Value = x.Value
-                }).AsNoTracking();
+            return _repository.Get();
         }
 
         [Route("v1/revenues/{id}")]
         [HttpGet]
         public Revenue Get(int id)
         {
-            return _context.Revenues.AsNoTracking().Where(x => x.Id == id).FirstOrDefault();
+            return _repository.Get(id);
         }
 
         [Route("v1/revenues")]
         [HttpPost]
         public ResultViewModel Post([FromBody]EditorRevenueViewModel model)
         {
+            model.Validate();
+            if (model.Invalid)
+            {
+                return new ResultViewModel()
+                {
+                    Success = false,
+                    Message = "Não foi possível cadastrar a receita.",
+                    Data = model.Notifications
+                };
+            }
+
             var revenue = new Revenue();
             revenue.Id = model.Id;
             revenue.Name = model.Name;
@@ -50,8 +54,7 @@ namespace Expenses.Controllers
             revenue.Value = model.Value;
             revenue.Date = System.DateTime.Now;
 
-            _context.Revenues.Add(revenue);
-            _context.SaveChanges();
+            _repository.Save(revenue);
 
             return new ResultViewModel
             {
@@ -65,14 +68,24 @@ namespace Expenses.Controllers
         [HttpPut]
         public ResultViewModel Put([FromBody]EditorRevenueViewModel model)
         {
-            var revenue = _context.Revenues.Find(model.Id);
+            model.Validate();
+            if (model.Invalid)
+            {
+                return new ResultViewModel()
+                {
+                    Success = false,
+                    Message = "Não foi possível atualizar a receita.",
+                    Data = model.Invalid
+                };
+            }
+            
+            var revenue = _repository.Get(model.Id);
             revenue.Name = model.Name;
             revenue.UserId = model.UserId;
             revenue.Value = model.Value;
             revenue.Date = model.Date;
 
-            _context.Entry<Revenue>(revenue).State = EntityState.Modified;
-            _context.SaveChanges();
+            _repository.Update(revenue);
 
             return new ResultViewModel
             {
@@ -86,9 +99,7 @@ namespace Expenses.Controllers
         [HttpDelete]
         public Revenue Delete([FromBody]Revenue revenue)
         {
-            _context.Revenues.Remove(revenue);
-            _context.SaveChanges();
-
+            _repository.Delete(revenue);
             return revenue;
         }
     }

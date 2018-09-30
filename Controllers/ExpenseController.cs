@@ -1,45 +1,32 @@
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Expenses.Data;
 using Expenses.Models;
 using Expenses.ViewModels.ExpenseViewModels;
 using Expenses.ViewModels;
+using Expenses.Repositories;
 
 namespace Expenses.Controllers
 {
     public class ExpenseController : Controller
     {
-        private readonly StoreDataContext _context;
-
-        public ExpenseController(StoreDataContext context)
+        private readonly ExpenseRepository _repository;
+        public ExpenseController(ExpenseRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [Route("v1/expenses")]
         [HttpGet]
         public IEnumerable<ListExpenseViewModel> Get()
         {
-            return _context.Expenses
-            .Select(x => new ListExpenseViewModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Date = x.Date,
-                Value = x.Value,
-                PaymentMethodId = x.PaymentMethodId,
-                UserId = x.UserId
-            })
-            .AsNoTracking();
+            return _repository.Get();
         }
 
         [Route("v1/expenses/{id}")]
         [HttpGet]
         public Expense Get(int id)
         {
-            return _context.Expenses.AsNoTracking().Where(x => x.Id == id).FirstOrDefault();
+            return _repository.Get(id);
         }
 
         [Route("v1/expenses")]
@@ -65,8 +52,7 @@ namespace Expenses.Controllers
             expense.PaymentMethodId = model.PaymentMethodId;
             expense.UserId = model.UserId;
 
-            _context.Expenses.Add(expense);
-            _context.SaveChanges();
+            _repository.Save(expense);
 
             return new ResultViewModel
             {
@@ -86,20 +72,19 @@ namespace Expenses.Controllers
                 return new ResultViewModel
                 {
                     Success = false,
-                    Message = "Não foi possível cadastrar a despesa.",
+                    Message = "Não foi possível atualizar a despesa.",
                     Data = model.Notifications
                 };
             }
 
-            var expense = _context.Expenses.Find(model.Id);
+            var expense = _repository.Get(model.Id);
             expense.Name = model.Name;
             expense.Value = model.Value;
             expense.Date = model.Date;
             expense.PaymentMethodId = model.PaymentMethodId;
             expense.UserId = model.UserId;
 
-            _context.Entry<Expense>(expense).State = EntityState.Modified;
-            _context.SaveChanges();
+            _repository.Update(expense);
 
             return new ResultViewModel
             {
@@ -113,9 +98,7 @@ namespace Expenses.Controllers
         [HttpDelete]
         public Expense Delete([FromBody]Expense expense)
         {
-            _context.Expenses.Remove(expense);
-            _context.SaveChanges();
-
+            _repository.Delete(expense);
             return expense;
         }
     }

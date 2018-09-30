@@ -1,4 +1,5 @@
 ﻿using Expenses.Data;
+using Expenses.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,14 @@ namespace Expenses
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddResponseCompression();
+
             services.AddScoped<StoreDataContext, StoreDataContext>();
+            
+            services.AddTransient<ExpenseRepository, ExpenseRepository>();
+            services.AddTransient<PaymentMethodRepository, PaymentMethodRepository>();
+            services.AddTransient<RevenueRepository, RevenueRepository>();
+            services.AddTransient<UserRepository, UserRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -22,6 +30,7 @@ namespace Expenses
             }
 
             app.UseMvc();
+            app.UseResponseCompression();
         }
     }
 }

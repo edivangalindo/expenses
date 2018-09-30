@@ -17,8 +17,8 @@ namespace Expenses.ViewModels.ExpenseViewModels
         {
             AddNotifications(
                 new Contract()
-                    .HasMaxLen(Name, 120, "Name", "O nome da despesa deve conter no máximo 120 caracteres.")
-                    .HasMinLen(Name, 3, "Name", "O nome da despesa deve conter mais que 3 caracteres.")
+                    .HasMaxLen(Name, 120, "Nome", "O nome da despesa deve conter no máximo 120 caracteres.")
+                    .HasMinLen(Name, 3, "Nome", "O nome da despesa deve conter mais que 3 caracteres.")
                     .IsGreaterThan(Value, 0, "Valor", "O Valor da despesa deve ser maior que 0.")
             );
         }
