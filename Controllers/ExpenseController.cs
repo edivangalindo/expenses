@@ -46,6 +46,17 @@ namespace Expenses.Controllers
         [HttpPost]
         public ResultViewModel Post([FromBody]EditorExpenseViewModel model)
         {
+            model.Validate();
+            if (model.Invalid)
+            {
+                return new ResultViewModel
+                {
+                    Success = false,
+                    Message = "Não foi possível cadastrar a despesa.",
+                    Data = model.Notifications
+                };
+            }
+
             var expense = new Expense();
             expense.Id = model.Id;
             expense.Name = model.Name;
@@ -69,6 +80,17 @@ namespace Expenses.Controllers
         [HttpPut]
         public ResultViewModel Put([FromBody]EditorExpenseViewModel model)
         {
+            model.Validate();
+            if (model.Invalid)
+            {
+                return new ResultViewModel
+                {
+                    Success = false,
+                    Message = "Não foi possível cadastrar a despesa.",
+                    Data = model.Notifications
+                };
+            }
+
             var expense = _context.Expenses.Find(model.Id);
             expense.Name = model.Name;
             expense.Value = model.Value;
