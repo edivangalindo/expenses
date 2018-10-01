@@ -35,6 +35,27 @@ namespace Expenses.Repositories
             return _context.Expenses.Find(id);
         }
 
+        public IEnumerable<ListExpenseViewModel> GetExpensesByMonth(int month)
+        {
+            return _context.Expenses
+                .Where(x => x.Date.Month == month)
+                .Select(x => new ListExpenseViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Date = x.Date,
+                    Value = x.Value,
+                    PaymentMethodId = x.PaymentMethodId,
+                    UserId = x.UserId
+                })
+                .AsNoTracking();
+        }
+
+        public decimal GetTotalValueByMonth(int month)
+        {
+            return GetExpensesByMonth(month).Sum(x => x.Value);
+        }
+
         public void Save(Expense expense)
         {
             _context.Expenses.Add(expense);

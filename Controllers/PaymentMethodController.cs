@@ -1,9 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Expenses.Data;
 using Expenses.Models;
-using System.Collections;
-using System.Linq;
 using Expenses.ViewModels;
 using System.Collections.Generic;
 using Expenses.ViewModels.PaymentMethodViewModels;

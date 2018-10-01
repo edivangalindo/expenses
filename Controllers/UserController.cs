@@ -1,13 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Expenses.Data;
 using Expenses.Models;
 using Expenses.Repositories;
 using Expenses.ViewModels;
 using Expenses.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Expenses.Controllers
 {

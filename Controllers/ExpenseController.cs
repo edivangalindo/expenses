@@ -28,6 +28,20 @@ namespace Expenses.Controllers
         {
             return _repository.Get(id);
         }
+        
+        [Route("v1/expenses/month/{month}")]
+        [HttpGet]
+        public IEnumerable<ListExpenseViewModel> GetExpensesByMonth(int month)
+        {
+            return _repository.GetExpensesByMonth(month);
+        }
+
+        [Route("v1/expenses/month/{month}/total")]
+        [HttpGet]
+        public decimal GetTotalValueByMonth(int month)
+        {
+            return _repository.GetTotalValueByMonth(month);
+        }
 
         [Route("v1/expenses")]
         [HttpPost]
